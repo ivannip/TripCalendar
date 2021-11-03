@@ -3,7 +3,7 @@ import Note from "./Note.jsx";
 function DisplayTripList(props) {
 
   const tripRecords = props.tripRecords;
-
+  console.log(tripRecords);
 
   return (
     <div>

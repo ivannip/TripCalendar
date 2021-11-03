@@ -71,6 +71,8 @@ function CalendarBody(props) {
                 if (res.ok) {
                     const data = await res.json()
                     setTripRecord(data);
+                    console.log(`After fetch:`);
+                    console.log(tripRecords);
                 } else {
                   if (res.status === 401) {
                     window.location.reload()
