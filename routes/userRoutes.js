@@ -31,12 +31,13 @@ router.post("/register", (req, res, next) => {
           const refreshToken = getRefreshToken({ _id: user._id })
           user.refreshToken.push({ refreshToken })
           user.save((err, user) => {
+            const userId = user._id;
             if (err) {
               res.statusCode = 500
               res.send(err)
             } else {
               res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
-              res.send({ success: true, token })
+              res.send({ success: true, token, userId })
             }
           })
         }
@@ -108,7 +109,7 @@ const jwt = require("jsonwebtoken")
 router.post("/refreshToken", (req, res, next) => {
   const { signedCookies = {} } = req
   const { refreshToken } = signedCookies
-
+  console.log(refreshToken);
   if (refreshToken) {
     try {
       const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)

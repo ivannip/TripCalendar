@@ -37,18 +37,30 @@ router.get("/triprecords", (req, res) => {
 
 //Read One
 router.get("/triprecords/:id", (req, res) => {
-  TripRecord.findById(req.params.id, (err, foundTrip) => {
-    if (err) {
-      res.send(err);
-    } else {res.json(foundTrip?foundTrip:"No record find!")};
 
-  })
+    TripRecord.findById(req.params.id, (err, foundTrip) => {
+      if (err) {
+        res.send(err);
+      } else {res.json(foundTrip?foundTrip:"No record find!")};
+    })
+
 });
 
-//Read by Month, Year and UserId
-router.get("/triprecords/:month/:year/:userId", (req, res) => {
-  const {year, month, userId} = req.params;
-  const filter = {year: parseInt(year), month: parseInt(month), userid: userId};
+
+
+//Read by type, date and UserId
+router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
+  const {type, date, userId, interval} = req.params;
+
+  let filter = {};
+  if (type === "range") {
+    //search by date range
+    filter = {userid: userId, date: {$gte: new Date(new Date(date).setDate(new Date(date).getDate()-interval)), $lte: new Date(date)}};
+  } else {
+    // search by specific $month
+    filter = {year: new Date(date).getFullYear(), month: new Date(date).getMonth()+1, userid: userId};
+  }
+
   TripRecord.aggregate([{$project:
     { userid: "$userid",
       title: "$title",

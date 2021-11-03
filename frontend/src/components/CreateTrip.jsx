@@ -1,17 +1,16 @@
-import React, {useState} from "react";
-import { useHistory } from "react-router-dom";
+import React, {useState, useContext} from "react";
+import { UserContext } from "../context/UserContext"
 import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import Zoom from '@mui/material/Zoom';
 
-
-
 function CreateTrip(props) {
-  const in_userid = props.userid;
+  const [userContext, setUserContext] = useContext(UserContext);
+
+  const userId = userContext.details.userId;
   const [IsShow, setIsShow] = useState(false);
-  const [tripRecord, setTripRecord] = useState({userid:in_userid, title:"", date:new Date(), remark:""});
-  let history = useHistory();
+  const [tripRecord, setTripRecord] = useState({userid:userId, title:"", date:new Date(), remark:""});
 
   function handleChange(event) {
     const {name, value} = event.target;
@@ -22,11 +21,9 @@ function CreateTrip(props) {
     try {
       event.preventDefault();
       await axios.post(process.env.REACT_APP_API_ENDPOINT+"api/triprecords", tripRecord);
-      const inDate = new Date(tripRecord.date);
-      const inMonth = inDate.getMonth()+1;
-      const inYear = inDate.getFullYear();
-      setTripRecord({userid: in_userid, title:"", date: new Date(), remark:""});
-      history.push({pathname: "/triprecords", state:{year: inYear, month: inMonth}});
+      setTripRecord({userid: userId, title:"", date: new Date(), remark:""});
+      props.statusAction();
+      //history.push({pathname: "/triprecords", state:{year: inYear, month: inMonth}});
     } catch(error) {
       console.error(error);
     }

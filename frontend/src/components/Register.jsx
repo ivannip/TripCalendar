@@ -1,6 +1,4 @@
 import React, {useState, useContext} from "react"
-import { useHistory } from "react-router-dom";
-import axios from "axios";
 import { Button, Callout, FormGroup, InputGroup} from "@blueprintjs/core";
 import { UserContext } from "../context/UserContext";
 
@@ -11,7 +9,7 @@ function Register() {
   const [userContext, setUserContext] = useContext(UserContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const history = useHistory();
+  //const history = useHistory();
 
   function handleChange(event) {
     const {name, value} = event.target;
@@ -23,40 +21,42 @@ function Register() {
     setIsSubmitting(true);
     setError("");
     const genericErrorMsg = "Something happened, try again later!";
-    try {
-      const response = await axios.post(process.env.REACT_APP_API_ENDPOINT+"users/register", newUser);
-      // const response = await fetch("/users/register", {
-      //   method: "POST",
-      //   credentials: "include",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(newUser),
-      // });
-      console.log(response)
-      if (response.status!== 200) {
+    fetch(process.env.REACT_APP_API_ENDPOINT + "users/register", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    })
+      .then(async response => {
+        setIsSubmitting(false)
+        if (!response.ok) {
           if (response.status === 400) {
             setError("Please fill all the fields correctly!")
           } else if (response.status === 401) {
             setError("Invalid email and password combination.")
           } else if (response.status === 500) {
-            //const data = await response.json();
-            const data = response.data;
+            console.log(response)
+            const data = await response.json()
             if (data.message) setError(data.message || genericErrorMsg)
           } else {
             setError(genericErrorMsg)
           }
-      } else {
-          //const data = await response.json();
-          const data = response.data;
+        } else {
+          const data = await response.json()
+          console.log(data);
+          console.log(userContext);
           setUserContext(oldValues => {
-            return { ...oldValues, token: data.token }
+            return { ...oldValues, token: data.token, details: data}
           })
-          history.push(`/triprecords`);
-      }
-    } catch (err) {
-      console.log(err);
-      setIsSubmitting(false);
-      setError(genericErrorMsg);
-    }
+
+          console.log("Register");
+          console.log(userContext);
+        }
+      })
+      .catch(error => {
+        setIsSubmitting(false)
+        setError(genericErrorMsg)
+      })
   }
 
   return (

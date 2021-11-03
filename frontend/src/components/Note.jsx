@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {useHistory} from "react-router-dom"
 import axios from "axios";
 
 //import DeleteIcon from '@material-ui/icons/Delete';
@@ -9,7 +8,6 @@ function Note(props) {
   //console.log(props);
   const [lineThrough, setLineThrough] = useState(false);
   const displayDate = new Date(props.trip.date);
-  let history = useHistory();
 
   function handleClick() {
     setLineThrough(!lineThrough);
@@ -18,7 +16,8 @@ function Note(props) {
   async function handleDelete() {
     try {
       await axios.delete(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/${props.idx}`);
-      history.push({pathname:"/triprecords", state: {year: displayDate.getFullYear(), month: displayDate.getMonth()+1}});
+      //history.push({pathname:"/triprecords", state: {year: displayDate.getFullYear(), month: displayDate.getMonth()+1}});
+      props.statusAction();
     } catch(error) {
       console.error(error);
     }

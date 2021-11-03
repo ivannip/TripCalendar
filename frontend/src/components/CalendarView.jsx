@@ -1,19 +1,13 @@
-import {useState, useEffect} from 'react';
-import {useHistory} from "react-router-dom";
+import {useState, useEffect, useCallback} from 'react';
 import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import PickersDay from '@mui/lab/PickersDay';
-//import DatePicker from '@mui/lab/DatePicker';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
-//import getDaysInMonth from 'date-fns/getDaysInMonth';
-import axios from "axios";
 
-// function getRandomNumber(min, max) {
-//   return Math.round(Math.random() * (max - min) + min);
-// }
+
 
 /**
  * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
@@ -38,55 +32,33 @@ import axios from "axios";
 
 
 
-function MyCalendar(props) {
+function CalendarView(props) {
   //const requestAbortController = React.useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [highlightedDays, setHighlightedDays] = useState([]);
-  const [value, setValue] = useState(props.date);
-  const userid = props.userid;
-  let history = useHistory();
+  const [value, setValue] = useState(new Date());
 
-  async function fetchTripRecord(date) {
-    const month = date.getMonth()+1;
-    const year = date.getFullYear();
-    //const daysInMonth = getDaysInMonth(date);
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/${month}/${year}/${userid}`);
-      //console.log(response.data);
-      //const daysToHighlight = [];
 
-      const daysToHighlight = (response.data).map((record) => {
-            return record.day;
-      })
-      setHighlightedDays([1, ...daysToHighlight]);
-
-    } catch (err) {
-      console.log('error', err);
-    }
-
-  }
-
-  function fetchHighlightedDays(date) {
-    //console.log("Variable date: " + date);
-    //const daysToHighlight = fetchTripRecord(date);
-    fetchTripRecord(date)
+  const fetchHighlightedDays = useCallback( () => {
+    const daysToHighlight = (props.tripRecords).map((record) => {
+          return record.day;
+    })
+    setHighlightedDays([1, ...daysToHighlight]);
     setIsLoading(false);
-  };
+
+  }, [props])
+
 
   useEffect(() => {
-    let isMount = true;
-    if (isMount) {
-      fetchHighlightedDays(props.date);
-      setValue(props.date);
-    }
-    return () => { isMount = false; }
-  }, [props,]);
+      fetchHighlightedDays();
+  }, [fetchHighlightedDays]);
+
 
   function handleMonthChange(date) {
     setIsLoading(true);
     setHighlightedDays([]);
-    fetchHighlightedDays(date);
-    history.push({pathname: "/triprecords", state: {year:date.getFullYear(), month:date.getMonth()+1}});
+    props.queryDateAction(date);
+    //history.push({pathname: "/triprecords", state: {year:date.getFullYear(), month:date.getMonth()+1}});
   };
 
   return (
@@ -125,4 +97,4 @@ function MyCalendar(props) {
 
 
 
-export default MyCalendar;
+export default CalendarView;

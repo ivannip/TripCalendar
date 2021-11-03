@@ -1,5 +1,4 @@
 import React, {useState, useContext} from "react"
-import { useHistory } from "react-router-dom";
 import { Button, Callout, FormGroup, InputGroup} from "@blueprintjs/core";
 import { UserContext } from "../context/UserContext"
 
@@ -9,7 +8,7 @@ function Login() {
   const [userContext, setUserContext] = useContext(UserContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  let history = useHistory();
+  //let history = useHistory();
 
   function handleChange(event) {
     setUser({...user, [event.target.name]:event.target.value});
@@ -43,11 +42,14 @@ function Login() {
         }
       } else {
           const data = await res.json()
+          console.log(data);
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token, details: data }
           })
+          console.log("Call login:");
+          console.log(userContext);
           // history.push(`/triprecords/${user.username}`);
-          history.push("/triprecords");
+          //history.push("/triprecords");
       }
     })
     .catch(error => {

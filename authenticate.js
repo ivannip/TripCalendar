@@ -7,7 +7,8 @@ exports.COOKIE_OPTIONS = {
   // Since localhost is not having https protocol,
   // secure cookies do not work correctly (in postman)
   //Cross site cookie -- samSite: none was disable due to non-https
-  //secure: !dev,
+  //Somehow samsite: none is not work for refreshtoken and logout. It works after change to LAX
+  secure: !dev,
   signed: true,
   maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
   sameSite: "Lax",
@@ -27,3 +28,6 @@ exports.getRefreshToken = user => {
 }
 
 exports.verifyUser = passport.authenticate("jwt", { session: false })
+
+
+//sameSite: "Lax",
