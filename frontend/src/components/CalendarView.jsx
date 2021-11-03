@@ -54,7 +54,6 @@ function CalendarView(props) {
       fetchHighlightedDays();
   }, [fetchHighlightedDays]);
 
-
   function handleMonthChange(date) {
     setIsLoading(true);
     setHighlightedDays([]);

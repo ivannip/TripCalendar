@@ -42,12 +42,9 @@ function Login() {
         }
       } else {
           const data = await res.json()
-          console.log(data);
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token, details: data }
           })
-          console.log("Call login:");
-          console.log(userContext);
           // history.push(`/triprecords/${user.username}`);
           //history.push("/triprecords");
       }

@@ -94,6 +94,7 @@ function CalendarBody(props) {
         }).then( async (res) => {
                   if (res.ok) {
                       const data = await res.json()
+                      console.log(data);
                       setTripRecord(data);
                   } else {
                     if (res.status === 401) {
@@ -105,7 +106,7 @@ function CalendarBody(props) {
             })
 
       }
-      
+
       console.log("UseEffect:" + inDate);
       fetchRecord();
 
