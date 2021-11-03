@@ -35,7 +35,8 @@ function CalendarBody(props) {
       setInDate(date);
       //setTripRecord([]);
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`);
+        //const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`);
+        const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords`);
         console.log(res.data);
         setTripRecord(res.data);
       } catch (err) {
