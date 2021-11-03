@@ -16,37 +16,10 @@ function CalendarBody(props) {
     const [status, setStatus] = useState(true);
     const [userContext, setUserContext] = useContext(UserContext);
     const userId = userContext.details.userId;
-  //  const history = useHistory();
 
-  //   const fetchUserDetails = useCallback(() => {
-  //     fetch("/users/whoami", {
-  //       method: "GET",
-  //       credentials: "include",
-  //     // Pass authentication token as bearer token in header
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${userContext.token}`,
-  //       },
-  //     }).then(async response => {
-  //       if (response.ok) {
-  //         const data = await response.json()
-  //         setUserContext(oldValues => {
-  //           return { ...oldValues, details: data }
-  //         })
-  //       } else {
-  //         if (response.status === 401) {
-  //         // Edge case: when the token has expired.
-  //         // This could happen if the refreshToken calls have failed due to network error or
-  //         // User has had the tab open from previous day and tries to click on the Fetch button
-  //           window.location.reload()
-  //         } else {
-  //           setUserContext(oldValues => {
-  //             return { ...oldValues, details: null }
-  //           })
-  //         }
-  //       }
-  //     })
-  // }, [setUserContext, userContext.token])
+    function resetTripRecord() {
+      setTripRecord([]);
+    }
 
     function handleStatus() {
       console.log("Call handleStatus");
@@ -112,7 +85,7 @@ function CalendarBody(props) {
       console.log("UseEffect:" + inDate);
       fetchRecord();
 
-    }, [inDate, status])
+    }, [status])
 
 
   return (
@@ -120,7 +93,7 @@ function CalendarBody(props) {
       <div className="row">
         <div className="col-6">
           <CreateTrip statusAction={handleStatus}/>
-          <CalendarView tripRecords={tripRecords} queryDateAction={changeQueryDate}/>
+          <CalendarView tripRecords={tripRecords} queryDateAction={resetTripRecord}/>
         </div>
         <div className="col-6">
           <DayCount />
