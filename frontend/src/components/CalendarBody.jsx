@@ -5,6 +5,7 @@ import DayCount from "./DayCount";
 //import DisplayTripList from "./DisplayTripList";
 import Note from "./Note";
 import { UserContext } from "../context/UserContext"
+import axios from "axios";
 
 
 
@@ -29,29 +30,19 @@ function CalendarBody(props) {
     //   setInDate(date);
     // }
 
-    function handleDateChange(date) {
+    async function handleDateChange(date) {
       console.log("Handle Date Change:"+date);
       setInDate(date);
-      setTripRecord([]);
-      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`, {
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userContext.token}`,
-            },
-      }).then( async (res) => {
-                if (res.ok) {
-                    const data = await res.json()
-                    console.log(data);
-                    setTripRecord(data);
-                } else {
-                  if (res.status === 401) {
-                    window.location.reload()
-                  } else {
+      //setTripRecord([]);
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`);
+        console.log(res.data);
+        setTripRecord(res.data);
+      } catch (err) {
+        console.log(err);
+      }
 
-                  }
-                }
-          })
+
     }
 
     // const fetchTripRecord = useCallback( () => {
