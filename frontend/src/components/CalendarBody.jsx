@@ -17,10 +17,6 @@ function CalendarBody(props) {
     const [userContext, setUserContext] = useContext(UserContext);
     const userId = userContext.details.userId;
 
-    function resetTripRecord() {
-      setTripRecord([]);
-    }
-
     function handleStatus() {
       console.log("Call handleStatus");
       setStatus((previousStatus) => {
@@ -28,9 +24,33 @@ function CalendarBody(props) {
       })
     }
 
-    function changeQueryDate(date) {
-      console.log("Call Change Query Date:" + date);
+    // function changeQueryDate(date) {
+    //   console.log("Call Change Query Date:" + date);
+    //   setInDate(date);
+    // }
+
+    function handleDateChange(date) {
+      console.log("Handle Date Change:"+date);
       setInDate(date);
+      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`, {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userContext.token}`,
+            },
+      }).then( async (res) => {
+                if (res.ok) {
+                    const data = await res.json()
+                    console.log(data);
+                    setTripRecord(data);
+                } else {
+                  if (res.status === 401) {
+                    window.location.reload()
+                  } else {
+
+                  }
+                }
+          })
     }
 
     // const fetchTripRecord = useCallback( () => {
@@ -93,7 +113,7 @@ function CalendarBody(props) {
       <div className="row">
         <div className="col-6">
           <CreateTrip statusAction={handleStatus}/>
-          <CalendarView tripRecords={tripRecords} queryDateAction={resetTripRecord}/>
+          <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
         </div>
         <div className="col-6">
           <DayCount />
