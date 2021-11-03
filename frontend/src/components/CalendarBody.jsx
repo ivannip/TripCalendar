@@ -32,6 +32,7 @@ function CalendarBody(props) {
     function handleDateChange(date) {
       console.log("Handle Date Change:"+date);
       setInDate(date);
+      setTripRecord([]);
       fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`, {
             credentials: "include",
             headers: {
@@ -89,7 +90,6 @@ function CalendarBody(props) {
         }).then( async (res) => {
                   if (res.ok) {
                       const data = await res.json()
-                      console.log(data);
                       setTripRecord(data);
                   } else {
                     if (res.status === 401) {
