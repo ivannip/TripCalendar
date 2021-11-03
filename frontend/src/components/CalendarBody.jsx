@@ -49,12 +49,14 @@ function CalendarBody(props) {
   // }, [setUserContext, userContext.token])
 
     function handleStatus() {
+      console.log("Call handleStatus");
       setStatus((previousStatus) => {
         return !previousStatus;
       })
     }
 
     function changeQueryDate(date) {
+      console.log("Call Change Query Date:" + date);
       setInDate(date);
     }
 

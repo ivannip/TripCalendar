@@ -47,7 +47,7 @@ function CalendarView(props) {
     setHighlightedDays([1, ...daysToHighlight]);
     setIsLoading(false);
 
-  }, [props])
+  }, [props.tripRecords])
 
 
   useEffect(() => {
