@@ -12,6 +12,8 @@ function CreateTrip(props) {
   const [IsShow, setIsShow] = useState(false);
   const [tripRecord, setTripRecord] = useState({userid:userId, title:"", date:new Date(), remark:""});
 
+  console.log("Start CreateTrip");
+
   function handleChange(event) {
     const {name, value} = event.target;
     setTripRecord({...tripRecord, [name]:value});

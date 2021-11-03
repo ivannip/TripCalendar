@@ -58,38 +58,58 @@ function CalendarBody(props) {
       setInDate(date);
     }
 
-    const fetchTripRecord = useCallback( () => {
-
-      console.log("start fetch for date:"+inDate);
-
-      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userContext.token}`,
-            },
-          }).then( async (res) => {
-                if (res.ok) {
-                    const data = await res.json()
-                    setTripRecord(data);
-                    console.log(`After fetch:`);
-                    console.log(tripRecords);
-                } else {
-                  if (res.status === 401) {
-                    window.location.reload()
-                  } else {
-
-                  }
-                }
-              })
-    }, [setTripRecord, inDate, userId, userContext.token]);
+    // const fetchTripRecord = useCallback( () => {
+    //   console.log("start fetch for date:"+inDate);
+    //   fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
+    //         credentials: "include",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Authorization: `Bearer ${userContext.token}`,
+    //         },
+    //       }).then( async (res) => {
+    //             if (res.ok) {
+    //                 const data = await res.json()
+    //                 setTripRecord(data);
+    //             } else {
+    //               if (res.status === 401) {
+    //                 window.location.reload()
+    //               } else {
+    //
+    //               }
+    //             }
+    //           })
+    // }, [setTripRecord, inDate, status]);
 
 
     useEffect( () => {
 
-      fetchTripRecord()
+      function fetchRecord() {
+        console.log("start fetchRecord for date:"+inDate);
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userContext.token}`,
+              },
+        }).then( async (res) => {
+                  if (res.ok) {
+                      const data = await res.json()
+                      setTripRecord(data);
+                  } else {
+                    if (res.status === 401) {
+                      window.location.reload()
+                    } else {
 
-    }, [status, fetchTripRecord])
+                    }
+                  }
+            })
+
+      }
+      
+      console.log("UseEffect:" + inDate);
+      fetchRecord();
+
+    }, [inDate, status])
 
 
   return (

@@ -38,6 +38,7 @@ function CalendarView(props) {
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [value, setValue] = useState(new Date());
 
+  console.log("start CalendarView");
 
   const fetchHighlightedDays = useCallback( () => {
     const daysToHighlight = (props.tripRecords).map((record) => {
