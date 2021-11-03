@@ -2,7 +2,8 @@ import React, {useState, useEffect, useCallback, useContext} from "react";
 import CreateTrip from "./CreateTrip";
 import CalendarView from "./CalendarView";
 import DayCount from "./DayCount";
-import DisplayTripList from "./DisplayTripList";
+//import DisplayTripList from "./DisplayTripList";
+import Note from "./Note";
 import { UserContext } from "../context/UserContext"
 
 
@@ -100,7 +101,11 @@ function CalendarBody(props) {
         </div>
         <div className="col-6">
           <DayCount />
-          <DisplayTripList tripRecords={tripRecords} statusAction={handleStatus} />
+          {
+            tripRecords.map( (record) => {
+                  return <Note trip={record} idx={record._id} key={record._id} statusAction={handleStatus}/>
+            })
+          }
         </div>
       </div>
     </div>
@@ -108,6 +113,6 @@ function CalendarBody(props) {
 
 }
 
-          // <MyCalendar date={inDate} userid={userContext.details.userId}/>
-
+// <MyCalendar date={inDate} userid={userContext.details.userId}/>
+//<DisplayTripList tripRecords={tripRecords} statusAction={handleStatus} />
 export default CalendarBody;
