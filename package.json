@@ -10,7 +10,7 @@
     "heroku-postbuild": "cd frontend && npm install && npm run build"
   },
   "engines": {
-   "node": "14.x"
+   "node": "14.17.5"
   },
   "keywords": [],
   "author": "",

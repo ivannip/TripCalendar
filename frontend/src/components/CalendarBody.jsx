@@ -109,7 +109,7 @@ function CalendarBody(props) {
               },
         }).then( async (res) => {
                   if (res.ok) {
-                      const data = await res.json()
+                      const data = await res.json();
                       console.log(data);
                       setTripRecord(data);
                   } else {
