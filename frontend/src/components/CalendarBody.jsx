@@ -25,6 +25,10 @@ function CalendarBody(props) {
       })
     }
 
+    function handleClick() {
+      handleDateChange(inDate);
+    }
+
     // function changeQueryDate(date) {
     //   console.log("Call Change Query Date:" + date);
     //   setInDate(date);
@@ -107,6 +111,8 @@ function CalendarBody(props) {
     <div className="container-fluid">
       <div className="row">
         <div className="col-6">
+      
+        <button name="refresh" value="refresh" onClick={handleClick}>{inDate.toDateString()}</button>
           <CreateTrip statusAction={handleStatus}/>
           <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
         </div>
