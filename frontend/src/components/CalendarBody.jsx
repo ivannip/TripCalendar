@@ -111,8 +111,8 @@ function CalendarBody(props) {
     <div className="container-fluid">
       <div className="row">
         <div className="col-6">
-      
-        <button name="refresh" value="refresh" onClick={handleClick}>{inDate.toDateString()}</button>
+        {inDate.toDateString()}
+        <button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
           <CreateTrip statusAction={handleStatus}/>
           <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
         </div>
