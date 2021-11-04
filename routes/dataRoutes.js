@@ -79,6 +79,34 @@ router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
   })
 })
 
+// Temp Query to cater the bug in Heroku
+//Read by type, date and UserId
+router.post("/triprecords/calendar", (req, res) => {
+  const {date, userId} = req.body;
+
+
+  const filter = {year: new Date(date).getFullYear(), month: new Date(date).getMonth()+1, userid: userId};
+
+
+  TripRecord.aggregate([{$project:
+    { userid: "$userid",
+      title: "$title",
+      date: "$date",
+      remark: "$remark",
+      year: {$year: "$date"},
+      month: {$month: "$date"},
+      day: {$dayOfMonth: "$date"}}
+    }, { $match: filter }],
+    (err, foundTrips) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(foundTrips.length===0?[]:foundTrips);
+    }
+  })
+})
+
+
 
 //Delete One
 router.delete("/triprecords/:id", (req, res) => {
