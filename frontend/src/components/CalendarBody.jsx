@@ -34,21 +34,40 @@ function CalendarBody(props) {
     //   setInDate(date);
     // }
 
-    async function handleDateChange(date) {
+    function handleDateChange(date) {
       console.log("Handle Date Change:"+date);
       setInDate(date);
-      //setTripRecord([]);
-      try {
-        //const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`);
-        console.log(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`)
-        const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
-        console.log(res.data);
-        setTripRecord(res.data);
-      } catch (err) {
-        console.log(err);
-      }
+      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userContext.token}`,
+            },
+      }).then( async (res) => {
+                if (res.ok) {
+                    let data = [];
+                    console.log(data);
+                    data = await res.json()
+                    console.log(data);
+                    setTripRecord(data);
+                } else {
+                  if (res.status === 401) {
+                    window.location.reload()
+                  } else {
 
-
+                  }
+                }
+          })
+      // try {
+      //   const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
+      //   console.log(res.data);
+      //   setTripRecord((oldData) => {
+      //     return res.data;
+      //   });
+      // } catch (err) {
+      //   console.log(err);
+      //}
     }
 
     // const fetchTripRecord = useCallback( () => {
