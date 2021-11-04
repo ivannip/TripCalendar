@@ -29,45 +29,47 @@ function CalendarBody(props) {
       handleDateChange(inDate);
     }
 
-    // function changeQueryDate(date) {
-    //   console.log("Call Change Query Date:" + date);
-    //   setInDate(date);
-    // }
+    function changeQueryDate(date) {
+      console.log("Call Change Query Date:" + date);
+      setInDate(date);
+      setStatus((previousStatus) => {
+        return !previousStatus;
+      })
+    }
 
-    function handleDateChange(date) {
+    async function handleDateChange(date) {
       console.log("Handle Date Change:"+date);
       setInDate(date);
-      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userContext.token}`,
-            },
-      }).then( async (res) => {
-                if (res.ok) {
-                    let data = [];
-                    console.log(data);
-                    data = await res.json()
-                    console.log(data);
-                    setTripRecord(data);
-                } else {
-                  if (res.status === 401) {
-                    window.location.reload()
-                  } else {
-
-                  }
-                }
-          })
-      // try {
-      //   const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
-      //   console.log(res.data);
-      //   setTripRecord((oldData) => {
-      //     return res.data;
-      //   });
-      // } catch (err) {
-      //   console.log(err);
-      //}
+      // fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
+      //       method: "GET",
+      //       credentials: "include",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: `Bearer ${userContext.token}`,
+      //       },
+      //     }).then( async (res) => {
+      //           if (res.ok) {
+      //
+      //               const data = await res.json()
+      //               console.log(data);
+      //               setTripRecord(data);
+      //           } else {
+      //             if (res.status === 401) {
+      //               window.location.reload()
+      //             } else {
+      //
+      //             }
+      //           }
+      //     })
+      try {
+        const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
+        console.log(res.data);
+        setTripRecord((oldData) => {
+          return res.data;
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     // const fetchTripRecord = useCallback( () => {
@@ -134,7 +136,7 @@ function CalendarBody(props) {
         {inDate.toDateString()}
         <button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
           <CreateTrip statusAction={handleStatus}/>
-          <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
+          <CalendarView tripRecords={tripRecords} queryDateAction={changeQueryDate}/>
         </div>
         <div className="col-6">
           <DayCount />
