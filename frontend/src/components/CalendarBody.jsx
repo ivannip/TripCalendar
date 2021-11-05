@@ -108,18 +108,18 @@ function CalendarBody(props) {
       function fetchRecord() {
         console.log("start fetchRecord for date:"+inDate);
         setIsLoading(true);
-        fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${userContext.token}`,
-              },
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          setTripRecord(data);
+        // fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
+        //       method: "GET",
+        //       credentials: "include",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${userContext.token}`,
+        //       },
+        // })
+        axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: inDate, userId: userId})
+        .then(result => {
+          console.log(result.data);
+          setTripRecord(result.data);
         })
         .catch(err => {
           console.log(err);
