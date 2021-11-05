@@ -109,7 +109,7 @@ const jwt = require("jsonwebtoken")
 router.post("/refreshToken", (req, res, next) => {
   const { signedCookies = {} } = req
   const { refreshToken } = signedCookies
-  console.log(refreshToken);
+  //console.log(refreshToken);
   if (refreshToken) {
     try {
       const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)

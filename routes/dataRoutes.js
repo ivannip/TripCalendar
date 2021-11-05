@@ -49,8 +49,9 @@ router.get("/triprecords/:id", (req, res) => {
 
 
 //Read by type, date and UserId
-router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
-  const {type, date, userId, interval} = req.params;
+router.post("/triprecords/:type", (req, res) => {
+  const type = req.params.type;
+  const {year, month, userId, interval, date} = req.body;
 
   let filter = {};
   if (type === "range") {
@@ -58,7 +59,7 @@ router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
     filter = {userid: userId, date: {$gte: new Date(new Date(date).setDate(new Date(date).getDate()-interval)), $lte: new Date(date)}};
   } else {
     // search by specific $month
-    filter = {year: new Date(date).getFullYear(), month: new Date(date).getMonth()+1, userid: userId};
+    filter = {year: year, month: month, userid: userId};
   }
 
   TripRecord.aggregate([{$project:
@@ -81,31 +82,28 @@ router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
 
 // Temp Query to cater the bug in Heroku
 //Read by type, date and UserId
-router.post("/triprecords/calendar", (req, res) => {
-  const {month, year, userId} = req.body;
-
-
-  const filter = {year: year, month: month, userid: userId};
-  console.log(filter);
-
-
-  TripRecord.aggregate([{$project:
-    { userid: "$userid",
-      title: "$title",
-      date: "$date",
-      remark: "$remark",
-      year: {$year: "$date"},
-      month: {$month: "$date"},
-      day: {$dayOfMonth: "$date"}}
-    }, { $match: filter }],
-    (err, foundTrips) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(foundTrips.length===0?[]:foundTrips);
-    }
-  })
-})
+// router.post("/triprecords/calendar", (req, res) => {
+//   console.log(req.body);
+//   const {month, year, userId} = req.body;
+//   const filter = {year: year, month: month, userid: userId};
+//   console.log(filter);
+//   TripRecord.aggregate([{$project:
+//     { userid: "$userid",
+//       title: "$title",
+//       date: "$date",
+//       remark: "$remark",
+//       year: {$year: "$date"},
+//       month: {$month: "$date"},
+//       day: {$dayOfMonth: "$date"}}
+//     }, { $match: filter }],
+//     (err, foundTrips) => {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       res.json(foundTrips.length===0?[]:foundTrips);
+//     }
+//   })
+// })
 
 
 

@@ -20,87 +20,39 @@ function CalendarBody(props) {
     const userId = userContext.details.userId;
 
     function handleStatus() {
-      console.log("Call handleStatus");
       setStatus((previousStatus) => {
         return !previousStatus;
       })
-    }
-
-    function handleClick() {
-      handleDateChange(inDate);
-    }
+    };
 
     function changeQueryDate(date) {
       console.log("Call Change Query Date:" + date);
       setInDate(date);
       console.log("Status date:" + inDate);
-      // setStatus((previousStatus) => {
-      //   return !previousStatus;
-      // })
-    }
-
-    async function handleDateChange(date) {
-
-      setInDate(date);
-      console.log("Handle Date Change - input date:"+date);
-      console.log("Handle Date Change - status date:"+inDate);
-      setIsLoading(true);
-      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userContext.token}`,
-            },
-          }).then( async (res) => {
-                if (res.ok) {
-                    const data = await res.json()
-                    console.log(data);
-                    setTripRecord(data);
-                } else {
-                  if (res.status === 401) {
-                    window.location.reload()
-                  } else {
-
-                  }
-                }
-          })
-      setIsLoading(false);
-      // setIsLoading(true);
-      // try {
-      //   const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
-      //   console.log(res.data);
-      //   setTripRecord((oldData) => {
-      //     return res.data;
-      //   });
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      // setIsLoading(false);
     }
 
     // const fetchTripRecord = useCallback( () => {
     //   console.log("start fetch for date:"+inDate);
-    //   fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-    //         method: "GET",
-    //         credentials: "include",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Authorization: `Bearer ${userContext.token}`,
-    //         },
-    //       }).then( async (res) => {
-    //             if (res.ok) {
-    //                 const data = await res.json()
-    //                 setTripRecord(data);
-    //             } else {
-    //               if (res.status === 401) {
-    //                 window.location.reload()
-    //               } else {
+    //   const criteria = {year:inDate.getFullYear(), month: inDate.getMonth()+1, userId: userId};
+    //   console.log(criteria);
+    //   const options = {
+    //     url: `${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`,
+    //     method: 'POST',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${userContext.token}`
+    //     },
+    //     data: criteria
+    //   };
+    //   axios(options).then(result => {
+    //     console.log(result.data);
+    //     setTripRecord(result.data);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   })
     //
-    //               }
-    //             }
-    //           })
-    // }, [setTripRecord, inDate, status]);
+    // }, [setTripRecord, inDate]);
 
 
     useEffect( () => {
@@ -118,10 +70,17 @@ function CalendarBody(props) {
         // })
 
         const criteria = {year:inDate.getFullYear(), month: inDate.getMonth()+1, userId: userId};
-        console.log(criteria);
-        axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, criteria)
+        const options = {
+          url: `${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`,
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userContext.token}`
+          },
+          data: criteria
+        };
+        axios(options)
         .then(result => {
-          console.log(result.data);
           setTripRecord(result.data);
         })
         .catch(err => {
@@ -131,9 +90,7 @@ function CalendarBody(props) {
         setIsLoading(false);
       }
 
-      console.log("UseEffect:" + inDate);
       fetchRecord();
-
     }, [status, inDate])
 
 
@@ -141,8 +98,6 @@ function CalendarBody(props) {
     <div className="container-fluid">
       <div className="row">
         <div className="col-6">
-        {inDate.toDateString()}
-        <button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
           <CreateTrip statusAction={handleStatus} />
           {isLoading? (
             <div>Loading ... </div>
@@ -168,6 +123,6 @@ function CalendarBody(props) {
 
 }
 
-// <MyCalendar date={inDate} userid={userContext.details.userId}/>
-//<DisplayTripList tripRecords={tripRecords} statusAction={handleStatus} />
+
+//<button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
 export default CalendarBody;
