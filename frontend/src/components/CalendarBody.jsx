@@ -33,9 +33,10 @@ function CalendarBody(props) {
     function changeQueryDate(date) {
       console.log("Call Change Query Date:" + date);
       setInDate(date);
-      setStatus((previousStatus) => {
-        return !previousStatus;
-      })
+      console.log("Status date:" + inDate);
+      // setStatus((previousStatus) => {
+      //   return !previousStatus;
+      // })
     }
 
     async function handleDateChange(date) {
@@ -114,26 +115,23 @@ function CalendarBody(props) {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${userContext.token}`,
               },
-        }).then( async (res) => {
-                  if (res.ok) {
-                      const data = await res.json();
-                      console.log(data);
-                      setTripRecord(data);
-                  } else {
-                    if (res.status === 401) {
-                      window.location.reload()
-                    } else {
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          setTripRecord(data);
+        })
+        .catch(err => {
+          console.log(err);
+        })
 
-                    }
-                  }
-            })
         setIsLoading(false);
       }
 
       console.log("UseEffect:" + inDate);
       fetchRecord();
 
-    }, [status])
+    }, [status, inDate])
 
 
   return (
@@ -146,7 +144,7 @@ function CalendarBody(props) {
           {isLoading? (
             <div>Loading ... </div>
           ): (
-            <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
+            <CalendarView tripRecords={tripRecords} queryDateAction={changeQueryDate}/>
           )}
         </div>
         <div className="col-6">
