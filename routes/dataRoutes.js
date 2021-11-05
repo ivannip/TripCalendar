@@ -82,10 +82,11 @@ router.get("/triprecords/:type/:date/:userId/:interval", (req, res) => {
 // Temp Query to cater the bug in Heroku
 //Read by type, date and UserId
 router.post("/triprecords/calendar", (req, res) => {
-  const {date, userId} = req.body;
+  const {month, year, userId} = req.body;
 
 
-  const filter = {year: new Date(date).getFullYear(), month: new Date(date).getMonth()+1, userid: userId};
+  const filter = {year: year, month: month, userid: userId};
+  console.log(filter);
 
 
   TripRecord.aggregate([{$project:

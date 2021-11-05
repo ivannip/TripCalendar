@@ -116,10 +116,10 @@ function CalendarBody(props) {
         //         Authorization: `Bearer ${userContext.token}`,
         //       },
         // })
-        const url =`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`;
-        console.log(url);
-        //axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: inDate, userId: userId})
-        axios.get(url)
+
+        const criteria = {year:inDate.getFullYear(), month: inDate.getMonth()+1, userId: userId};
+        console.log(criteria);
+        axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, criteria)
         .then(result => {
           console.log(result.data);
           setTripRecord(result.data);
