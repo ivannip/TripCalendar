@@ -16,6 +16,7 @@ function CalendarBody(props) {
     const [tripRecords, setTripRecord] = useState([]);
     const [status, setStatus] = useState(true);
     const [userContext, setUserContext] = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState("true");
     const userId = userContext.details.userId;
 
     function handleStatus() {
@@ -38,38 +39,43 @@ function CalendarBody(props) {
     }
 
     async function handleDateChange(date) {
-      console.log("Handle Date Change:"+date);
+
       setInDate(date);
-      // fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-      //       method: "GET",
-      //       credentials: "include",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: `Bearer ${userContext.token}`,
-      //       },
-      //     }).then( async (res) => {
-      //           if (res.ok) {
-      //
-      //               const data = await res.json()
-      //               console.log(data);
-      //               setTripRecord(data);
-      //           } else {
-      //             if (res.status === 401) {
-      //               window.location.reload()
-      //             } else {
-      //
-      //             }
-      //           }
-      //     })
-      try {
-        const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
-        console.log(res.data);
-        setTripRecord((oldData) => {
-          return res.data;
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      console.log("Handle Date Change - input date:"+date);
+      console.log("Handle Date Change - status date:"+inDate);
+      setIsLoading(true);
+      fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${date}/${userId}/0`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userContext.token}`,
+            },
+          }).then( async (res) => {
+                if (res.ok) {
+                    const data = await res.json()
+                    console.log(data);
+                    setTripRecord(data);
+                } else {
+                  if (res.status === 401) {
+                    window.location.reload()
+                  } else {
+
+                  }
+                }
+          })
+      setIsLoading(false);
+      // setIsLoading(true);
+      // try {
+      //   const res = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {date: date, userId: userId});
+      //   console.log(res.data);
+      //   setTripRecord((oldData) => {
+      //     return res.data;
+      //   });
+      // } catch (err) {
+      //   console.log(err);
+      // }
+      // setIsLoading(false);
     }
 
     // const fetchTripRecord = useCallback( () => {
@@ -100,6 +106,7 @@ function CalendarBody(props) {
 
       function fetchRecord() {
         console.log("start fetchRecord for date:"+inDate);
+        setIsLoading(true);
         fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
               method: "GET",
               credentials: "include",
@@ -120,7 +127,7 @@ function CalendarBody(props) {
                     }
                   }
             })
-
+        setIsLoading(false);
       }
 
       console.log("UseEffect:" + inDate);
@@ -135,15 +142,23 @@ function CalendarBody(props) {
         <div className="col-6">
         {inDate.toDateString()}
         <button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
-          <CreateTrip statusAction={handleStatus}/>
-          <CalendarView tripRecords={tripRecords} queryDateAction={changeQueryDate}/>
+          <CreateTrip statusAction={handleStatus} />
+          {isLoading? (
+            <div>Loading ... </div>
+          ): (
+            <CalendarView tripRecords={tripRecords} queryDateAction={handleDateChange}/>
+          )}
         </div>
         <div className="col-6">
           <DayCount />
           {
-            tripRecords.map( (record) => {
-                  return <Note trip={record} idx={record._id} key={record._id} statusAction={handleStatus}/>
-            })
+            isLoading?(
+              <div>Loading...</div>
+            ):(
+              tripRecords.map( (record) => {
+                    return <Note trip={record} idx={record._id} key={record._id} statusAction={handleStatus}/>
+              })
+            )
           }
         </div>
       </div>
