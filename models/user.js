@@ -16,9 +16,11 @@ const User = new Schema({
   type: String,
   default: "local"
   },
-  point: {
-    type: Number,
-    default: 50
+  name: {
+    type: String
+  },
+  mobile: {
+    type: Number
   },
   refreshToken: {
     type: [Session]

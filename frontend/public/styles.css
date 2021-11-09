@@ -123,3 +123,8 @@ form.create-note button {
   cursor: pointer;
   outline: none;
 }
+
+.error {
+  margin-top: 0.25rem;
+  color: #f65157;
+}
