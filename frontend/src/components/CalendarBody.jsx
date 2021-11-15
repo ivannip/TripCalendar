@@ -60,16 +60,25 @@ function CalendarBody(props) {
       function fetchRecord() {
         console.log("start fetchRecord for date:"+inDate);
         setIsLoading(true);
-        // fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/month/${inDate}/${userId}/0`, {
-        //       method: "GET",
-        //       credentials: "include",
-        //       headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${userContext.token}`,
-        //       },
-        // })
-
         const criteria = {year:inDate.getFullYear(), month: inDate.getMonth()+1, userId: userId};
+      //   fetch(`${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`, {
+      //         method: "POST",
+      //         credentials: "include",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: `Bearer ${userContext.token}`,
+      //         },
+      //         body: JSON.stringify(criteria),
+      //   })
+      //   .then(result => {
+      //     setTripRecord(result.data);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+      //
+      //   setIsLoading(false);
+      // }
         const options = {
           url: `${process.env.REACT_APP_API_ENDPOINT}api/triprecords/calendar`,
           method: 'POST',
@@ -123,6 +132,4 @@ function CalendarBody(props) {
 
 }
 
-
-//<button name="refresh" value="refresh" onClick={handleStatus}>Handle Status</button><button name="refresh" value="refresh" onClick={handleClick}>Handle Click</button>
 export default CalendarBody;

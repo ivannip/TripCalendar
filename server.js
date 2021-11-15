@@ -34,13 +34,13 @@ app.use(passport.initialize());
 app.use("/users", userRouter);
 
 //Setup data API route
-const router = require("./routes/dataRoutes.js");
+const router = require("./routes/dataRoutes");
 app.use('/api', router);
 
 //Setup for CORS and whitelist from env file
 // const whitelist = process.env.WHITELISTED_DOMAINS? process.env.WHITELISTED_DOMAINS.split(","):[];
-// console.log(whitelist);
 // const corsOptions = {
+//   preflightContinue: true,
 //   origin: function(origin, callback) {
 //     if (!origin || whitelist.indexOf(origin) !== -1) {
 //       callback(null, true)
@@ -51,7 +51,14 @@ app.use('/api', router);
 //
 //   credentials: true
 // }
-//
+// const corsOptions = {
+//     origin: '*',
+//     methods: [],
+//     allowedHeaders: [],
+//     exposedHeaders: [],
+//     credentials: true,
+//     preflightContinue: true,
+// };
 // app.use(cors(corsOptions));
 
 mongoose.connection.once('open', function() {

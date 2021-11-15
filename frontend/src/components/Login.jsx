@@ -18,12 +18,14 @@ function Login() {
   //   history.push(`/triprecords/${user.username}`);
   // }
 
+  //Login handler
   function handleSubmit(event) {
     event.preventDefault();
     setIsSubmitting(true);
     setError("");
 
     const genericErrorMsg = "Something went wrong. Please try again later.";
+    //console.log(process.env.REACT_APP_API_ENDPOINT);
     fetch(process.env.REACT_APP_API_ENDPOINT+"users/login", {
       method: "POST",
       credentials: "include",
@@ -51,7 +53,7 @@ function Login() {
     })
     .catch(error => {
       setIsSubmitting(false);
-      setError(genericErrorMsg);
+      setError(error);
     })
 
   }

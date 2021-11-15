@@ -8,6 +8,18 @@ const passport = require("passport");
 
 const { getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser } = require("../authenticate");
 
+//setup proxy for server client connection with diff ports, added for deployment in local nginx
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+  next();
+});
+
 router.post("/register", (req, res, next) => {
   // Verify that first name is not empty
   // if (!req.body.firstName) {
@@ -110,6 +122,7 @@ router.post("/refreshToken", (req, res, next) => {
   const { signedCookies = {} } = req
   const { refreshToken } = signedCookies
   //console.log(refreshToken);
+
   if (refreshToken) {
     try {
       const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
